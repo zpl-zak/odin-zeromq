@@ -112,7 +112,15 @@ s_send :: proc(s: ^Socket, str: string) -> int {
 	return size;
 }
 
-s_sendmore :: proc(s: ^Socket, str: string) -> int {
+s_send_empty :: proc(s: ^Socket) -> int {
+	msg := Message{};
+	msg_init(&msg);
+	size := msg_send(&msg, s, 0);
+	msg_close(&msg);
+	return size;
+}
+
+s_send_more :: proc(s: ^Socket, str: string) -> int {
 	msg := Message{};
 	msg_init_size(&msg, cast(uint)len(str));
 	mem.copy(msg_data(&msg), &str[0], len(str));
