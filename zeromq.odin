@@ -5,6 +5,8 @@ when ODIN_OS == "windows" {
 import "core:mem.odin"
 import "core:strings.odin"
 
+using import "core:c.odin"
+
 @(link_prefix="zmq_", default_calling_convention="c")
 foreign zeromq {
 	errno                  :: proc() -> int                                                                      ---;
