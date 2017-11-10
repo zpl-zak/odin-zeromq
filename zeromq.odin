@@ -61,6 +61,19 @@ foreign zeromq {
 	atomic_counter_dec     :: proc(counter: ^Atomic_Counter) -> int                                              ---;
 	atomic_counter_value   :: proc(counter: ^Atomic_Counter) -> int                                              ---;
 	atomic_counter_destroy :: proc(counter: ^^Atomic_Counter)                                                    ---;
+
+	poller_new             :: proc() -> ^Poller                                                                  ---;
+	poller_destroy         :: proc(p: ^^Poller) -> int                                                           ---;
+	poller_add             :: proc(p: ^Poller, socket, user_data: rawptr, events: u16) -> int                    ---;
+	poller_modify          :: proc(p: ^Poller, socket: rawptr, events: u16) -> int                               ---;
+	poller_remove          :: proc(p: ^Poller, socket: rawptr) -> int                                            ---;
+	poller_wait            :: proc(p: ^Poller, pe: ^Poller_Event, timeout: c_long) -> int                        ---;
+	poller_wait_all        :: proc(p: ^Poller, pe: ^Poller_Event, n_events: int, timeout: c_long) -> int         ---;
+	poller_add_fd          :: proc(p: ^Poller, fd: int, user_data: rawptr, events: u16) -> int                   ---;
+	poller_modify_fd       :: proc(p: ^Poller, fd: int, events: u16) -> int                                      ---;
+	poller_remove_fd       :: proc(p: ^Poller, fd: int) -> int                                                   ---;
+	socket_get_peer_state  :: proc(socket: rawptr, routing_id: rawptr, routing_id_size: uint) -> int             ---;
+	pool                   :: proc(items: ^[]Poll_Item, nitems: int, timeout: c_long) -> int                     ---;
 }
 
 bind :: proc(s: ^Socket, addr: string) -> int {
@@ -97,12 +110,36 @@ s_send :: proc(s: ^Socket, str: string) -> int {
 	return size;
 }
 
+s_sendmore :: proc(s: ^Socket, str: string) -> int {
+	msg := Message{};
+	msg_init_size(&msg, cast(uint)len(str));
+	mem.copy(msg_data(&msg), &str[0], len(str));
+	size := msg_send(&msg, s, SNDMORE);
+	msg_close(&msg);
+	return size;
+}
+
 Context        :: struct #ordered {}
 Socket         :: struct #ordered {}
 Atomic_Counter :: struct #ordered {}
+Poller         :: struct #ordered {}
 
 Message :: struct #ordered {
 	data: [64]u8,
+}
+
+Poller_Event :: struct #ordered {
+	socket: rawptr,
+	fd: int, // TODO(zaklaus): Double check this!
+	user_data: rawptr,
+	events: u16,
+}
+
+Poll_Item :: struct #ordered {
+	socket: rawptr,
+	fd: int, // TODO(zaklaus): Double check this!
+	events: u16,
+	revents: u16,
 }
 
 // Context options
@@ -237,5 +274,11 @@ EVENT_CLOSE_FAILED    :: 0x0100;
 EVENT_DISCONNECTED    :: 0x0200;
 EVENT_MONITOR_STOPPED :: 0x0400;
 EVENT_ALL             :: 0xFFFF;
+
+// I/O multiplexing
+POLLIN  :: 1;
+POLLOUT :: 2;
+POLLERR :: 4;
+POLLPRI :: 8;
 
 Free_Proc :: #type proc "c" (data, hint: rawptr);
