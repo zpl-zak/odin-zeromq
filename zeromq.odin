@@ -170,6 +170,8 @@ PUSH   :: 8;
 XPUB   :: 9;
 XSUB   :: 10;
 STREAM :: 11;
+XREQ   :: DEALER;
+XREP   :: ROUTER;
 
 // Socket options
 AFFINITY                 :: 4;
