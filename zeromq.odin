@@ -90,7 +90,7 @@ setsockopt :: proc(s: ^Socket, option: int, optval: string) -> int {
 	return setsockopt(s, option, cast(rawptr)&optval[0], cast(uint)len(optval));
 }
 
-s_recv :: proc(s: ^Socket) -> string {
+recv :: proc(s: ^Socket) -> string {
 	msg := Message{};
 	msg_init(&msg);
 	size := msg_recv(&msg, s, 0);
@@ -103,7 +103,7 @@ s_recv :: proc(s: ^Socket) -> string {
 	return ret;
 }
 
-s_send :: proc(s: ^Socket, str: string) -> int {
+send :: proc(s: ^Socket, str: string) -> int {
 	msg := Message{};
 	msg_init_size(&msg, cast(uint)len(str));
 	mem.copy(msg_data(&msg), &str[0], len(str));
@@ -112,7 +112,7 @@ s_send :: proc(s: ^Socket, str: string) -> int {
 	return size;
 }
 
-s_send_empty :: proc(s: ^Socket) -> int {
+send_empty :: proc(s: ^Socket) -> int {
 	msg := Message{};
 	msg_init(&msg);
 	size := msg_send(&msg, s, 0);
@@ -120,7 +120,7 @@ s_send_empty :: proc(s: ^Socket) -> int {
 	return size;
 }
 
-s_send_more :: proc(s: ^Socket, str: string) -> int {
+send_more :: proc(s: ^Socket, str: string) -> int {
 	msg := Message{};
 	msg_init_size(&msg, cast(uint)len(str));
 	mem.copy(msg_data(&msg), &str[0], len(str));

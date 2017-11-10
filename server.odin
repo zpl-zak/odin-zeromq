@@ -21,7 +21,7 @@ main :: proc() {
 		temps := cnt % 3 == 0 ? 32 : 23;
 
 		data := fmt.bprintf(buf, "%05d %d", zipcode, temps);
-		s_send(publisher, data);
+		send(publisher, data);
 
 		cnt += 1;
 		if cnt > 10 do cnt = 0;

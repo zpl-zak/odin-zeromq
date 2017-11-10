@@ -15,7 +15,7 @@ main :: proc() {
 	assert(rc == 0);
 
 	for i in 0..15 {
-		str := s_recv(subscriber);
+		str := recv(subscriber);
 		defer free(str);
 		fmt.println("zipcode and temps:", str);
 	}
