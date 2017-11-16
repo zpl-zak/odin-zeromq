@@ -34,7 +34,7 @@ foreign zeromq {
 	msg_set                :: proc(msg: ^Message, property, optval: i32) -> i32                                  ---;
 	msg_gets               :: proc(msg: ^Message, property: ^u8) -> ^u8                                          ---;
 
-	socket                 :: proc(s: ^Context, typ: i32) -> ^Socket                                             ---;
+	socket                 :: proc(s: ^Context, kind: i32) -> ^Socket                                            ---;
 	close                  :: proc(s: ^Socket) -> i32                                                            ---;
 	setsockopt             :: proc(s: ^Socket, option: i32, optval: rawptr, optvallen: uint) -> i32              ---;
 	getsockopt             :: proc(s: ^Socket, option: i32, optval: rawptr, optvallen: ^uint) -> i32             ---;
