@@ -2,6 +2,8 @@
 
 Odin bindings for ZeroMQ distributed messaging library.
 
+They are based on ZeroMQ **4.2.3** version.
+
 ## Dependencies
 
 * ZeroMQ static library [link](http://zeromq.org/)
