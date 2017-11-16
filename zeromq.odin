@@ -9,84 +9,84 @@ using import "core:c.odin"
 
 @(link_prefix="zmq_", default_calling_convention="c")
 foreign zeromq {
-	errno                  :: proc() -> int                                                                      ---;
-	strerror               :: proc(errnum: int) -> ^u8                                                           ---;
-	version                :: proc(major, minor, patch: ^int)                                                    ---;
+	errno                  :: proc() -> i32                                                                      ---;
+	strerror               :: proc(errnum: i32) -> ^u8                                                           ---;
+	version                :: proc(major, minor, patch: ^i32)                                                    ---;
 
 	ctx_new                :: proc() -> ^Context                                                                 ---;
-	ctx_term               :: proc(ctx: ^Context) -> int                                                         ---;
-	ctx_shutdown           :: proc(ctx: ^Context) -> int                                                         ---;
-	ctx_set                :: proc(ctx: ^Context, option, optval: int) -> int                                    ---;
-	ctx_get                :: proc(ctx: ^Context, option: int) -> int                                            ---;
+	ctx_term               :: proc(ctx: ^Context) -> i32                                                         ---;
+	ctx_shutdown           :: proc(ctx: ^Context) -> i32                                                         ---;
+	ctx_set                :: proc(ctx: ^Context, option, optval: i32) -> i32                                    ---;
+	ctx_get                :: proc(ctx: ^Context, option: i32) -> i32                                            ---;
 
-	msg_init               :: proc(msg: ^Message) -> int                                                         ---;
-	msg_init_size          :: proc(msg: ^Message, size: uint) -> int                                             ---;
-	msg_init_data          :: proc(msg: ^Message, data: rawptr, size: uint, ffn: Free_Proc, hint: rawptr) -> int ---;
-	msg_send               :: proc(msg: ^Message, s: rawptr, flags: int) -> int                                  ---;
-	msg_recv               :: proc(msg: ^Message, s: rawptr, flags: int) -> int                                  ---;
-	msg_close              :: proc(msg: ^Message) -> int                                                         ---;
-	msg_move               :: proc(dest: ^Message, src: ^Message) -> int                                         ---;
-	msg_copy               :: proc(dest: ^Message, src: ^Message) -> int                                         ---;
+	msg_init               :: proc(msg: ^Message) -> i32                                                         ---;
+	msg_init_size          :: proc(msg: ^Message, size: uint) -> i32                                             ---;
+	msg_init_data          :: proc(msg: ^Message, data: rawptr, size: uint, ffn: Free_Proc, hint: rawptr) -> i32 ---;
+	msg_send               :: proc(msg: ^Message, s: rawptr, flags: i32) -> i32                                  ---;
+	msg_recv               :: proc(msg: ^Message, s: rawptr, flags: i32) -> i32                                  ---;
+	msg_close              :: proc(msg: ^Message) -> i32                                                         ---;
+	msg_move               :: proc(dest: ^Message, src: ^Message) -> i32                                         ---;
+	msg_copy               :: proc(dest: ^Message, src: ^Message) -> i32                                         ---;
 	msg_data               :: proc(msg: ^Message) -> rawptr                                                      ---;
 	msg_size               :: proc(msg: ^Message) -> uint                                                        ---;
-	msg_more               :: proc(msg: ^Message) -> int                                                         ---;
-	msg_get                :: proc(msg: ^Message, property: int) -> int                                          ---;
-	msg_set                :: proc(msg: ^Message, property, optval: int) -> int                                  ---;
+	msg_more               :: proc(msg: ^Message) -> i32                                                         ---;
+	msg_get                :: proc(msg: ^Message, property: i32) -> i32                                          ---;
+	msg_set                :: proc(msg: ^Message, property, optval: i32) -> i32                                  ---;
 	msg_gets               :: proc(msg: ^Message, property: ^u8) -> ^u8                                          ---;
 
-	socket                 :: proc(s: ^Context, typ: int) -> ^Socket                                             ---;
-	close                  :: proc(s: ^Socket) -> int                                                            ---;
-	setsockopt             :: proc(s: ^Socket, option: int, optval: rawptr, optvallen: uint) -> int              ---;
-	getsockopt             :: proc(s: ^Socket, option: int, optval: rawptr, optvallen: ^uint) -> int             ---;
-	bind                   :: proc(s: ^Socket, addr: ^u8) -> int                                                 ---;
-	connect                :: proc(s: ^Socket, addr: ^u8) -> int                                                 ---;
-	unbind                 :: proc(s: ^Socket, addr: ^u8) -> int                                                 ---;
-	disconnect             :: proc(s: ^Socket, addr: ^u8) -> int                                                 ---;
-	send                   :: proc(s: ^Socket, buf: rawptr, len: uint, flags: int) -> int                        ---;
-	send_const             :: proc(s: ^Socket, buf: rawptr, len: uint, flags: int) -> int                        ---;
-	recv                   :: proc(s: ^Socket, buf: rawptr, len: uint, flags: int) -> int                        ---;
-	socket_monitor         :: proc(s: ^Socket, addr: ^u8, events: int) -> int                                    ---;
+	socket                 :: proc(s: ^Context, typ: i32) -> ^Socket                                             ---;
+	close                  :: proc(s: ^Socket) -> i32                                                            ---;
+	setsockopt             :: proc(s: ^Socket, option: i32, optval: rawptr, optvallen: uint) -> i32              ---;
+	getsockopt             :: proc(s: ^Socket, option: i32, optval: rawptr, optvallen: ^uint) -> i32             ---;
+	bind                   :: proc(s: ^Socket, addr: ^u8) -> i32                                                 ---;
+	connect                :: proc(s: ^Socket, addr: ^u8) -> i32                                                 ---;
+	unbind                 :: proc(s: ^Socket, addr: ^u8) -> i32                                                 ---;
+	disconnect             :: proc(s: ^Socket, addr: ^u8) -> i32                                                 ---;
+	send                   :: proc(s: ^Socket, buf: rawptr, len: uint, flags: i32) -> i32                        ---;
+	send_const             :: proc(s: ^Socket, buf: rawptr, len: uint, flags: i32) -> i32                        ---;
+	recv                   :: proc(s: ^Socket, buf: rawptr, len: uint, flags: i32) -> i32                        ---;
+	socket_monitor         :: proc(s: ^Socket, addr: ^u8, events: i32) -> i32                                    ---;
 
-	proxy                  :: proc(frontend, backend, capture: rawptr) -> int                                    ---;
-	proxy_steerable        :: proc(frontend, backend, capture, control: rawptr) -> int                           ---;
+	proxy                  :: proc(frontend, backend, capture: rawptr) -> i32                                    ---;
+	proxy_steerable        :: proc(frontend, backend, capture, control: rawptr) -> i32                           ---;
 
-	has                    :: proc(capability: ^u8) -> int                                                       ---;
+	has                    :: proc(capability: ^u8) -> i32                                                       ---;
 
 	z85_encode             :: proc(dest: ^u8, data: ^u8, size: uint) -> ^u8                                      ---;
 	z85_decode             :: proc(dest: ^u8, str: ^u8) -> ^u8                                                   ---;
-	curve_keypair          :: proc(z85_public_key, z85_secret_key: ^u8) -> int                                   ---;
-	curve_public           :: proc(z85_public_key, z85_secret_key: ^u8) -> int                                   ---;
+	curve_keypair          :: proc(z85_public_key, z85_secret_key: ^u8) -> i32                                   ---;
+	curve_public           :: proc(z85_public_key, z85_secret_key: ^u8) -> i32                                   ---;
 
 	atomic_counter_new     :: proc() -> ^Atomic_Counter                                                          ---;
-	atomic_counter_set     :: proc(counter: ^Atomic_Counter, value: int)                                         ---;
-	atomic_counter_inc     :: proc(counter: ^Atomic_Counter) -> int                                              ---;
-	atomic_counter_dec     :: proc(counter: ^Atomic_Counter) -> int                                              ---;
-	atomic_counter_value   :: proc(counter: ^Atomic_Counter) -> int                                              ---;
+	atomic_counter_set     :: proc(counter: ^Atomic_Counter, value: i32)                                         ---;
+	atomic_counter_inc     :: proc(counter: ^Atomic_Counter) -> i32                                              ---;
+	atomic_counter_dec     :: proc(counter: ^Atomic_Counter) -> i32                                              ---;
+	atomic_counter_value   :: proc(counter: ^Atomic_Counter) -> i32                                              ---;
 	atomic_counter_destroy :: proc(counter: ^^Atomic_Counter)                                                    ---;
 
 	poller_new             :: proc() -> ^Poller                                                                  ---;
-	poller_destroy         :: proc(p: ^^Poller) -> int                                                           ---;
-	poller_add             :: proc(p: ^Poller, socket, user_data: rawptr, events: u16) -> int                    ---;
-	poller_modify          :: proc(p: ^Poller, socket: rawptr, events: u16) -> int                               ---;
-	poller_remove          :: proc(p: ^Poller, socket: rawptr) -> int                                            ---;
-	poller_wait            :: proc(p: ^Poller, pe: ^Poller_Event, timeout: c_long) -> int                        ---;
-	poller_wait_all        :: proc(p: ^Poller, pe: ^Poller_Event, n_events: int, timeout: c_long) -> int         ---;
-	poller_add_fd          :: proc(p: ^Poller, fd: int, user_data: rawptr, events: u16) -> int                   ---;
-	poller_modify_fd       :: proc(p: ^Poller, fd: int, events: u16) -> int                                      ---;
-	poller_remove_fd       :: proc(p: ^Poller, fd: int) -> int                                                   ---;
-	socket_get_peer_state  :: proc(socket: rawptr, routing_id: rawptr, routing_id_size: uint) -> int             ---;
-	pool                   :: proc(items: ^[]Poll_Item, nitems: int, timeout: c_long) -> int                     ---;
+	poller_destroy         :: proc(p: ^^Poller) -> i32                                                           ---;
+	poller_add             :: proc(p: ^Poller, socket, user_data: rawptr, events: u16) -> i32                    ---;
+	poller_modify          :: proc(p: ^Poller, socket: rawptr, events: u16) -> i32                               ---;
+	poller_remove          :: proc(p: ^Poller, socket: rawptr) -> i32                                            ---;
+	poller_wait            :: proc(p: ^Poller, pe: ^Poller_Event, timeout: c_long) -> i32                        ---;
+	poller_wait_all        :: proc(p: ^Poller, pe: ^Poller_Event, n_events: i32, timeout: c_long) -> i32         ---;
+	poller_add_fd          :: proc(p: ^Poller, fd: i32, user_data: rawptr, events: u16) -> i32                   ---;
+	poller_modify_fd       :: proc(p: ^Poller, fd: i32, events: u16) -> i32                                      ---;
+	poller_remove_fd       :: proc(p: ^Poller, fd: i32) -> i32                                                   ---;
+	socket_get_peer_state  :: proc(socket: rawptr, routing_id: rawptr, routing_id_size: uint) -> i32             ---;
+	pool                   :: proc(items: ^[]Poll_Item, nitems: i32, timeout: c_long) -> i32                     ---;
 }
 
-bind :: proc(s: ^Socket, addr: string) -> int {
+bind :: proc(s: ^Socket, addr: string) -> i32 {
 	return bind(s, &addr[0]);
 }
 
-connect :: proc(s: ^Socket, addr: string) -> int {
+connect :: proc(s: ^Socket, addr: string) -> i32 {
 	return connect(s, &addr[0]);
 }
 
-setsockopt :: proc(s: ^Socket, option: int, optval: string) -> int {
+setsockopt :: proc(s: ^Socket, option: i32, optval: string) -> i32 {
 	return setsockopt(s, option, cast(rawptr)&optval[0], cast(uint)len(optval));
 }
 
@@ -103,7 +103,7 @@ recv :: proc(s: ^Socket) -> string {
 	return ret;
 }
 
-send :: proc(s: ^Socket, str: string) -> int {
+send :: proc(s: ^Socket, str: string) -> i32 {
 	msg := Message{};
 	msg_init_size(&msg, cast(uint)len(str));
 	mem.copy(msg_data(&msg), &str[0], len(str));
@@ -112,7 +112,7 @@ send :: proc(s: ^Socket, str: string) -> int {
 	return size;
 }
 
-send_empty :: proc(s: ^Socket) -> int {
+send_empty :: proc(s: ^Socket) -> i32 {
 	msg := Message{};
 	msg_init(&msg);
 	size := msg_send(&msg, s, 0);
@@ -120,7 +120,7 @@ send_empty :: proc(s: ^Socket) -> int {
 	return size;
 }
 
-send_more :: proc(s: ^Socket, str: string) -> int {
+send_more :: proc(s: ^Socket, str: string) -> i32 {
 	msg := Message{};
 	msg_init_size(&msg, cast(uint)len(str));
 	mem.copy(msg_data(&msg), &str[0], len(str));
@@ -140,14 +140,14 @@ Message :: struct #ordered {
 
 Poller_Event :: struct #ordered {
 	socket: rawptr,
-	fd: int, // TODO(zaklaus): Double check this!
+	fd: i32, // TODO(zaklaus): Double check this!
 	user_data: rawptr,
 	events: u16,
 }
 
 Poll_Item :: struct #ordered {
 	socket: rawptr,
-	fd: int, // TODO(zaklaus): Double check this!
+	fd: i32, // TODO(zaklaus): Double check this!
 	events: u16,
 	revents: u16,
 }
