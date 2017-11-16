@@ -96,7 +96,7 @@ recv :: proc(s: ^Socket) -> string {
 	size := msg_recv(&msg, s, 0);
 	if size == -1 do return "";
 	str := make([]u8, size+1);
-	mem.copy(&str[0], msg_data(&msg), size);
+	mem.copy(&str[0], msg_data(&msg), cast(int)size);
 	msg_close(&msg);
 	str[size] = 0;
 	ret := strings.to_odin_string(&str[0]);
@@ -272,6 +272,27 @@ GSSAPI :: 3;
 
 // RADIO-DISH protocol
 GROUP_MAX_LENGTH :: 15;
+
+// Deprecated options and aliases
+IDENTITY                :: ROUTING_ID;
+CONNECT_RID             :: CONNECT_ROUTING_ID;
+TCP_ACCEPT_FILTER       :: 38;
+IPC_FILTER_PID          :: 58;
+IPC_FILTER_UID          :: 59;
+IPC_FILTER_GID          :: 60;
+IPV4ONLY                :: 31;
+DELAY_ATTACH_ON_CONNECT :: IMMEDIATE;
+NOBLOCK                 :: DONTWAIT;
+FAIL_UNROUTABLE         :: ROUTER_MANDATORY;
+ROUTER_BEHAVIOR         :: ROUTER_MANDATORY;
+
+// Deprecated Message options
+SRCFD :: 2;
+
+// Deprecated aliases
+STREAMER  :: 1;
+FORWARDER :: 2;
+QUEUE     :: 3;
 
 // Socket transport events (TCP, IPC and TIPC only)
 EVENT_CONNECTED       :: 0x0001;
