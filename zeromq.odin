@@ -2,6 +2,10 @@ when ODIN_OS == "windows" {
 	foreign import zeromq "libzmq.lib"
 }
 
+when ODIN_OS == "linux" {
+	foreign import zeromq "system:zmq"
+}
+
 import "core:mem.odin"
 import "core:strings.odin"
 
