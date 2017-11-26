@@ -8,6 +8,11 @@ They are based on ZeroMQ **4.2.3** version.
 
 * ZeroMQ static library [link](http://zeromq.org/)
 
+## Tested platforms
+* Windows using Microsoft Visual Studio 2017 64-bit.
+* GNU/Linux Ubuntu 16.04.3 LTS.
+
+
 ## Build instructions (VS 2017)
 1. Open project and retarget to demanded SDK version.
 2. Add `ws2_32.lib;Iphlpapi.lib;Advapi32.lib;Crypt32.lib;` to your additional libraries to link against for libzmq project.
