@@ -18,6 +18,17 @@ They are based on ZeroMQ **4.2.3** version.
 2. Add `ws2_32.lib;Iphlpapi.lib;Advapi32.lib;Crypt32.lib;` to your additional libraries to link against for libzmq project.
 3. Done!
 
+## Build instructions (GNU/Linux)
+```sh
+./autogen.sh
+./configure    
+make -j 4
+make check 
+sudo make install && ldconfig
+```
+You will need `build-essentials`, `libtool`, `autoconf`, `automake` and `uuid-dev` or equivalent.
+
+
 ## License
 
 This content is dual-licensed to either the public domain or under the following: `you are granted a perpetual, irrevocable license to copy, modify,
