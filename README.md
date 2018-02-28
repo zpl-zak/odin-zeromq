@@ -4,6 +4,8 @@ Odin bindings for ZeroMQ distributed messaging library.
 
 They are based on ZeroMQ **4.2.3** version.
 
+**NOTE:** This repo is out-of-date and requires updating to the latest Odin's version. However, due to my time constraint, I am not able to perform such an action. If you're willing to update it, I'd be happy to assist and accept any changes.
+
 ## Dependencies
 
 * ZeroMQ static library [link](http://zeromq.org/)
@@ -31,5 +33,4 @@ You will need `build-essentials`, `libtool`, `autoconf`, `automake` and `uuid-de
 
 ## License
 
-This content is dual-licensed to either the public domain or under the following: `you are granted a perpetual, irrevocable license to copy, modify,
-    publish, and distribute this content as you see fit. NO WARRANTY IS IMPLIED, USE AT YOUR OWN RISK!`
+Apache License 2.0
