@@ -1,9 +1,13 @@
-import "core:strings.odin"
-import "core:fmt.odin"
+package examples
 
-using import "zeromq.odin"
+import "core:strings"
+import "core:fmt"
+
+import zeromq "../"
 
 main :: proc() {
+	using zeromq
+	
 	ctx := ctx_new();
 
 	publisher := socket(ctx, PUB);
