@@ -14,12 +14,12 @@ main :: proc() {
 	rc := connect(subscriber, "tcp://localhost:5556");
 	assert(rc == 0);
 
-	rc = setsockopt(subscriber, SUBSCRIBE, "10001 ");
+	rc = setsockopt_string(subscriber, SUBSCRIBE, "10001 ");
 	assert(rc == 0);
 
 	for i in 0..15 {
-		str := recv(subscriber);
-		defer free(str);
+		str := recv_string(subscriber);
+		defer delete(str);
 		fmt.println("zipcode and temps:", str);
 	}
 

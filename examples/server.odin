@@ -7,7 +7,7 @@ import zeromq "../"
 
 main :: proc() {
 	using zeromq
-	
+
 	ctx := ctx_new();
 
 	publisher := socket(ctx, PUB);
@@ -15,7 +15,7 @@ main :: proc() {
 	assert(rc == 0);
 
 	buf := make([]u8, 20);
-	defer free(buf);
+	defer delete(buf);
 	cnt := 0;
 
 	fmt.println("Broadcasting weather data...");
@@ -25,7 +25,7 @@ main :: proc() {
 		temps := cnt % 3 == 0 ? 32 : 23;
 
 		data := fmt.bprintf(buf, "%05d %d", zipcode, temps);
-		send(publisher, data);
+		send_string(publisher, data);
 
 		cnt += 1;
 		if cnt > 10 do cnt = 0;
