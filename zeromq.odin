@@ -47,14 +47,14 @@ foreign zeromq {
 	close                  :: proc(s: ^Socket) -> i32                                                            ---;
 	setsockopt             :: proc(s: ^Socket, option: i32, optval: rawptr, optvallen: uint) -> i32              ---;
 	getsockopt             :: proc(s: ^Socket, option: i32, optval: rawptr, optvallen: ^uint) -> i32             ---;
-	bind                   :: proc(s: ^Socket, addr: cstring) -> i32                                                 ---;
-	connect                :: proc(s: ^Socket, addr: cstring) -> i32                                                 ---;
-	unbind                 :: proc(s: ^Socket, addr: cstring) -> i32                                                 ---;
-	disconnect             :: proc(s: ^Socket, addr: cstring) -> i32                                                 ---;
+	bind                   :: proc(s: ^Socket, addr: cstring) -> i32                                             ---;
+	connect                :: proc(s: ^Socket, addr: cstring) -> i32                                             ---;
+	unbind                 :: proc(s: ^Socket, addr: cstring) -> i32                                             ---;
+	disconnect             :: proc(s: ^Socket, addr: cstring) -> i32                                             ---;
 	send                   :: proc(s: ^Socket, buf: rawptr, len: uint, flags: i32) -> i32                        ---;
 	send_const             :: proc(s: ^Socket, buf: rawptr, len: uint, flags: i32) -> i32                        ---;
 	recv                   :: proc(s: ^Socket, buf: rawptr, len: uint, flags: i32) -> i32                        ---;
-	socket_monitor         :: proc(s: ^Socket, addr: cstring, events: i32) -> i32                                    ---;
+	socket_monitor         :: proc(s: ^Socket, addr: cstring, events: i32) -> i32                                ---;
 
 	proxy                  :: proc(frontend, backend, capture: rawptr) -> i32                                    ---;
 	proxy_steerable        :: proc(frontend, backend, capture, control: rawptr) -> i32                           ---;
