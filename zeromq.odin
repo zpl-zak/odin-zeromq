@@ -1,3 +1,5 @@
+package zeromq
+
 when ODIN_OS == "windows" {
 	foreign import zeromq "libzmq.lib"
 }
@@ -6,10 +8,9 @@ when ODIN_OS == "linux" {
 	foreign import zeromq "system:zmq"
 }
 
-import "core:mem.odin"
-import "core:strings.odin"
-
-using import "core:c.odin"
+import "core:c"
+import "core:mem"
+import "core:strings"
 
 @(link_prefix="zmq_", default_calling_convention="c")
 foreign zeromq {
@@ -46,14 +47,14 @@ foreign zeromq {
 	close                  :: proc(s: ^Socket) -> i32                                                            ---;
 	setsockopt             :: proc(s: ^Socket, option: i32, optval: rawptr, optvallen: uint) -> i32              ---;
 	getsockopt             :: proc(s: ^Socket, option: i32, optval: rawptr, optvallen: ^uint) -> i32             ---;
-	bind                   :: proc(s: ^Socket, addr: ^u8) -> i32                                                 ---;
-	connect                :: proc(s: ^Socket, addr: ^u8) -> i32                                                 ---;
-	unbind                 :: proc(s: ^Socket, addr: ^u8) -> i32                                                 ---;
-	disconnect             :: proc(s: ^Socket, addr: ^u8) -> i32                                                 ---;
+	bind                   :: proc(s: ^Socket, addr: cstring) -> i32                                             ---;
+	connect                :: proc(s: ^Socket, addr: cstring) -> i32                                             ---;
+	unbind                 :: proc(s: ^Socket, addr: cstring) -> i32                                             ---;
+	disconnect             :: proc(s: ^Socket, addr: cstring) -> i32                                             ---;
 	send                   :: proc(s: ^Socket, buf: rawptr, len: uint, flags: i32) -> i32                        ---;
 	send_const             :: proc(s: ^Socket, buf: rawptr, len: uint, flags: i32) -> i32                        ---;
 	recv                   :: proc(s: ^Socket, buf: rawptr, len: uint, flags: i32) -> i32                        ---;
-	socket_monitor         :: proc(s: ^Socket, addr: ^u8, events: i32) -> i32                                    ---;
+	socket_monitor         :: proc(s: ^Socket, addr: cstring, events: i32) -> i32                                ---;
 
 	proxy                  :: proc(frontend, backend, capture: rawptr) -> i32                                    ---;
 	proxy_steerable        :: proc(frontend, backend, capture, control: rawptr) -> i32                           ---;
@@ -77,13 +78,13 @@ foreign zeromq {
 	poller_add             :: proc(p: ^Poller, socket, user_data: rawptr, events: u16) -> i32                    ---;
 	poller_modify          :: proc(p: ^Poller, socket: rawptr, events: u16) -> i32                               ---;
 	poller_remove          :: proc(p: ^Poller, socket: rawptr) -> i32                                            ---;
-	poller_wait            :: proc(p: ^Poller, pe: ^Poller_Event, timeout: c_long) -> i32                        ---;
-	poller_wait_all        :: proc(p: ^Poller, pe: ^Poller_Event, n_events: i32, timeout: c_long) -> i32         ---;
+	poller_wait            :: proc(p: ^Poller, pe: ^Poller_Event, timeout: c.long) -> i32                        ---;
+	poller_wait_all        :: proc(p: ^Poller, pe: ^Poller_Event, n_events: i32, timeout: c.long) -> i32         ---;
 	poller_add_fd          :: proc(p: ^Poller, fd: i32, user_data: rawptr, events: u16) -> i32                   ---;
 	poller_modify_fd       :: proc(p: ^Poller, fd: i32, events: u16) -> i32                                      ---;
 	poller_remove_fd       :: proc(p: ^Poller, fd: i32) -> i32                                                   ---;
 	socket_get_peer_state  :: proc(socket: rawptr, routing_id: rawptr, routing_id_size: uint) -> i32             ---;
-	pool                   :: proc(items: ^[]Poll_Item, nitems: i32, timeout: c_long) -> i32                     ---;
+	pool                   :: proc(items: ^[]Poll_Item, nitems: i32, timeout: c.long) -> i32                     ---;
 
 	stopwatch_start        :: proc() -> rawptr                                                                   ---;
 	stopwatch_stop         :: proc(watch: rawptr) -> uint                                                        ---;
@@ -100,23 +101,15 @@ foreign zeromq {
 	timers_cancel          :: proc(timers: ^Timer, timer_id: i32) -> i32                                         ---;
 	timers_set_interval    :: proc(timers: ^Timer, timer_id: i32, i32erval: uint) -> i32                         ---;
 	timers_reset           :: proc(timers: ^Timer, timer_id: i32) -> i32                                         ---;
-	timers_timeout         :: proc(timers: ^Timer) -> c_long                                                     ---;
+	timers_timeout         :: proc(timers: ^Timer) -> c.long                                                     ---;
 	timers_execute         :: proc(timers: ^Timer) -> i32                                                        ---;
 }
 
-bind :: proc(s: ^Socket, addr: string) -> i32 {
-	return bind(s, &addr[0]);
+setsockopt_string :: proc(s: ^Socket, option: i32, optval: string) -> i32 {
+	return setsockopt(s, option, strings.ptr_from_string(optval), cast(uint)len(optval));
 }
 
-connect :: proc(s: ^Socket, addr: string) -> i32 {
-	return connect(s, &addr[0]);
-}
-
-setsockopt :: proc(s: ^Socket, option: i32, optval: string) -> i32 {
-	return setsockopt(s, option, cast(rawptr)&optval[0], cast(uint)len(optval));
-}
-
-recv :: proc(s: ^Socket) -> string {
+recv_string :: proc(s: ^Socket) -> string {
 	msg := Message{};
 	msg_init(&msg);
 	size := msg_recv(&msg, s, 0);
@@ -125,14 +118,14 @@ recv :: proc(s: ^Socket) -> string {
 	mem.copy(&str[0], msg_data(&msg), cast(int)size);
 	msg_close(&msg);
 	str[size] = 0;
-	ret := strings.to_odin_string(&str[0]);
+	ret := strings.string_from_ptr(mem.raw_data(str), len(str))
 	return ret;
 }
 
-send :: proc(s: ^Socket, str: string) -> i32 {
+send_string :: proc(s: ^Socket, str: string) -> i32 {
 	msg := Message{};
 	msg_init_size(&msg, cast(uint)len(str));
-	mem.copy(msg_data(&msg), &str[0], len(str));
+	mem.copy(msg_data(&msg), strings.ptr_from_string(str), len(str));
 	size := msg_send(&msg, s, 0);
 	msg_close(&msg);
 	return size;
@@ -149,30 +142,30 @@ send_empty :: proc(s: ^Socket) -> i32 {
 send_more :: proc(s: ^Socket, str: string) -> i32 {
 	msg := Message{};
 	msg_init_size(&msg, cast(uint)len(str));
-	mem.copy(msg_data(&msg), &str[0], len(str));
+	mem.copy(msg_data(&msg), strings.ptr_from_string(str), len(str));
 	size := msg_send(&msg, s, SNDMORE);
 	msg_close(&msg);
 	return size;
 }
 
-Context        :: struct #ordered {}
-Socket         :: struct #ordered {}
-Atomic_Counter :: struct #ordered {}
-Poller         :: struct #ordered {}
-Timer          :: struct #ordered {}
+Context        :: struct {}
+Socket         :: struct {}
+Atomic_Counter :: struct {}
+Poller         :: struct {}
+Timer          :: struct {}
 
-Message :: struct #ordered {
+Message :: struct {
 	data: [64]u8,
 }
 
-Poller_Event :: struct #ordered {
+Poller_Event :: struct {
 	socket: rawptr,
 	fd: i32, // TODO(zaklaus): Double check this!
 	user_data: rawptr,
 	events: u16,
 }
 
-Poll_Item :: struct #ordered {
+Poll_Item :: struct {
 	socket: rawptr,
 	fd: i32, // TODO(zaklaus): Double check this!
 	events: u16,
